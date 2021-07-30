@@ -4,7 +4,7 @@ import SingleLineInputComponentSchema from "../surveyComponents/Components/Singl
 import TextareaInputComponentSchema from "../surveyComponents/Components/TextareaInput";
 
 export interface ISurveyComponent {
-  componentSchemaId: string;
+  surveyComponentSchemaId: string;
   surveyId: string;
   questionId: string;
 }
@@ -16,7 +16,6 @@ export interface SurveyComponentProps {
   required?: boolean;
 }
 
-// TODO: Type this better!
 interface ISurveyComponentRegistryEntry {
   component: React.ComponentType<SurveyComponentProps & any>;
 
@@ -38,23 +37,25 @@ export const getAvailableSurveyComponentOptions = (): {
   label: string;
   value: string;
 }[] => {
-  return Object.keys(surveyComponentRegistry).map((componentSchemaId) => ({
-    label: surveyComponentRegistry[componentSchemaId].displayType,
-    value: componentSchemaId,
-  }));
+  return Object.keys(surveyComponentRegistry).map(
+    (surveyComponentSchemaId) => ({
+      label: surveyComponentRegistry[surveyComponentSchemaId].displayType,
+      value: surveyComponentSchemaId,
+    })
+  );
 };
 
 export const getSurveyComponentCreator = (
-  componentSchemaId: string
+  surveyComponentSchemaId: string
 ): React.ComponentType<any> => {
-  return surveyComponentRegistry[componentSchemaId].creator;
+  return surveyComponentRegistry[surveyComponentSchemaId].creator;
 };
 
 const surveyComponentFactory = (
   component: ISurveyComponent
 ): React.ComponentType<SurveyComponentProps & any> | undefined => {
   const entry: ISurveyComponentRegistryEntry | undefined =
-    surveyComponentRegistry[component.componentSchemaId];
+    surveyComponentRegistry[component.surveyComponentSchemaId];
 
   if (entry) {
     return entry.component;

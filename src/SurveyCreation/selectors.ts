@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
+
 import { RootState } from "../store/rootReducer";
 import {
   ISurveyCreationState,
@@ -17,10 +18,20 @@ export const selectSurveyId = (): string => {
 };
 
 export const selectSurveyCanBePublished = (): boolean => {
-  const questions = selectQuestions();
+  const survey = selectSurvey();
 
   return useMemo(() => {
+    if (!survey.surveyTitle) {
+      return false;
+    }
+
+    const { questions } = survey;
+
     for (const question of questions) {
+      if (!question.surveyComponentSchemaId || !question.questionTitle) {
+        return false;
+      }
+
       const { configuration } = question;
 
       for (const configurationItem of configuration) {
@@ -31,7 +42,13 @@ export const selectSurveyCanBePublished = (): boolean => {
     }
 
     return true;
-  }, [questions]);
+  }, [survey]);
+};
+
+export const selectQuestionCanBeRemoved = (): boolean => {
+  const questions = selectQuestions();
+
+  return useMemo(() => questions.length > 1, [questions]);
 };
 
 export const selectQuestions = (): Array<ISurveyQuestionCreation> =>
@@ -51,7 +68,7 @@ export const selectQuestionById = (
 export const selectQuestionComponentConfiguration = (
   questionId: string,
   fieldName: string
-): ISurveyQuestionComponentConfiguration | undefined => {
+): ISurveyQuestionComponentConfiguration<any> | undefined => {
   const question = selectQuestionById(questionId);
 
   const configuration = question?.configuration || [];

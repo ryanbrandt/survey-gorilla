@@ -4,6 +4,7 @@ import { Switch, Route } from "react-router-dom";
 import { createBrowserHistory } from "history";
 
 import SurveyCreation from "../SurveyCreation/Components/SurveyCreation";
+import SurveyDashboard from "../SurveyDashboard/Components/SurveyDashboard";
 
 export const history = createBrowserHistory();
 
@@ -15,5 +16,6 @@ export enum ROUTES {
 export default (
   <Switch>
     <Route path={ROUTES.creation} component={SurveyCreation} />
+    <Route path={ROUTES.dashboard} component={SurveyDashboard} />
   </Switch>
 );

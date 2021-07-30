@@ -1,23 +1,33 @@
-import { Input, Button } from "handsome-ui";
+import { Input } from "handsome-ui";
 
-import {
-  selectQuestions,
-  selectSurveyCanBePublished,
-  selectSurveyId,
-} from "../selectors";
+import { GENERIC_CREATION_ERROR } from "../constants";
+import { useSurveyConfiguration } from "../hooks";
+import { selectQuestions, selectSurveyId } from "../selectors";
+import SurveyCreationButtonSection from "../Subcomponents/SurveyCreationButtonSection";
 
 import SurveyQuestionCreation from "./SurveyQuestionCreation";
 
 const SurveyCreation = (): React.ReactElement => {
+  const [surveyConfiguration, setSurveyConfiguration] = useSurveyConfiguration({
+    surveyTitle: "",
+  });
+
+  const { surveyTitle } = surveyConfiguration;
+
   const surveyId = selectSurveyId();
   const questions = selectQuestions();
 
-  const canPublish = selectSurveyCanBePublished();
-
   return (
     <div className="flex_center-col">
-      <h2>Create a New Survey</h2>
-      <Input label="Survey Title*" />
+      <h1>Create a New Survey</h1>
+      <Input
+        label="Survey Title*"
+        value={surveyTitle}
+        onChange={(value: string) =>
+          setSurveyConfiguration({ ...surveyConfiguration, surveyTitle: value })
+        }
+        error={!surveyTitle ? GENERIC_CREATION_ERROR : ""}
+      />
       {questions.map((question, i) => (
         <SurveyQuestionCreation
           key={question.questionId}
@@ -26,13 +36,7 @@ const SurveyCreation = (): React.ReactElement => {
           question={question}
         />
       ))}
-      <Button
-        title="Publish Survey"
-        onClick={() => null}
-        disabled={!canPublish}
-        inverting
-        round
-      />
+      <SurveyCreationButtonSection />
     </div>
   );
 };

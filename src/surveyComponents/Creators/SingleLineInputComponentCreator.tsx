@@ -6,7 +6,7 @@ import { useSurveyQuestionComponentConfiguration } from "../../SurveyCreation/ho
 const SingleLineInputComponentCreator = ({
   component,
 }: SurveyComponentProps): JSX.Element => {
-  const [inputType, configureInputType] =
+  const [singleLineInputType, configureSingleLineInputType] =
     useSurveyQuestionComponentConfiguration("type", component, "", true);
 
   return (
@@ -14,10 +14,10 @@ const SingleLineInputComponentCreator = ({
       <Select
         label="Input Type*"
         options={["text", "number", "date"]}
-        value={inputType}
-        onChange={configureInputType}
+        value={singleLineInputType}
+        onChange={configureSingleLineInputType}
+        error={!singleLineInputType ? "This field is required" : ""}
       />
-      <Input label="Placeholder" value="" onChange={() => null} />
     </Column>
   );
 };

@@ -3,9 +3,9 @@ import { v4 } from "uuid";
 import * as t from "./actionTypes";
 import { Action } from "./actions";
 
-export interface ISurveyQuestionComponentConfiguration {
+export interface ISurveyQuestionComponentConfiguration<T> {
   name: string;
-  value: string;
+  value: T;
   required: boolean;
 }
 
@@ -14,7 +14,7 @@ export interface ISurveyQuestionCreation {
   questionTitle: string;
   surveyComponentSchemaId: string;
   required: boolean;
-  configuration: Array<ISurveyQuestionComponentConfiguration>;
+  configuration: Array<ISurveyQuestionComponentConfiguration<any>>;
 }
 
 export interface ISurveyCreationState {
@@ -30,7 +30,7 @@ const initialState: ISurveyCreationState = {
     {
       questionId: v4(),
       questionTitle: "",
-      required: false,
+      required: true,
       surveyComponentSchemaId: "",
       configuration: [],
     },
@@ -42,6 +42,15 @@ export default function (
   action: Action
 ): ISurveyCreationState {
   switch (action.type) {
+    case t.UPDATE_SURVEY_CONFIGURATION: {
+      const { surveyConfiguration } = action;
+
+      return {
+        ...state,
+        ...surveyConfiguration,
+      };
+    }
+
     case t.ADD_SURVEY_QUESTION: {
       const newQuestion: ISurveyQuestionCreation = {
         questionId: v4(),
@@ -57,6 +66,19 @@ export default function (
       };
     }
 
+    case t.REMOVE_SURVEY_QUESTION: {
+      const { questionIndex } = action;
+      const { questions } = state;
+
+      const newQuestions = [...questions];
+      newQuestions.splice(questionIndex, 1);
+
+      return {
+        ...state,
+        questions: newQuestions,
+      };
+    }
+
     case t.UPDATE_SURVEY_QUESTION: {
       const { configuration, questionId } = action;
 
@@ -66,9 +88,21 @@ export default function (
 
       const newQuestions = [...state.questions];
       if (updatedQuestionIndex > -1) {
+        const previousQuestionConfiguration =
+          newQuestions[updatedQuestionIndex];
+
+        let questionComponentConfiguration = configuration.configuration;
+        if (
+          configuration.surveyComponentSchemaId !==
+          previousQuestionConfiguration.surveyComponentSchemaId
+        ) {
+          questionComponentConfiguration = [];
+        }
+
         newQuestions[updatedQuestionIndex] = {
           ...newQuestions[updatedQuestionIndex],
           ...configuration,
+          configuration: questionComponentConfiguration,
         };
       }
 
@@ -97,7 +131,10 @@ export default function (
 
         const newConfiguration = [...configuration];
         if (updatedConfigurationFieldIndex > -1) {
-          newConfiguration[updatedConfigurationFieldIndex] = value;
+          newConfiguration[updatedConfigurationFieldIndex] = {
+            ...newConfiguration[updatedConfigurationFieldIndex],
+            value,
+          };
         } else {
           newConfiguration.push({ name: fieldName, value, required });
         }

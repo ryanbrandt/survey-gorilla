@@ -11,7 +11,7 @@ export enum MENU_OPTION {
 
 const AppSideMenu = (): React.ReactElement => {
   const DASHBOARD_REGEX = /^\/dashboard$/;
-  const CREATION_REGEX = /^\/survey-creation$/;
+  const CREATION_REGEX = /^\/create-survey$/;
 
   const computeActiveMenuItem = (): MENU_OPTION | null => {
     const { location } = history;
@@ -39,7 +39,6 @@ const AppSideMenu = (): React.ReactElement => {
     });
 
     return () => unlisten();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const SIDE_MENU_ITEMS = [

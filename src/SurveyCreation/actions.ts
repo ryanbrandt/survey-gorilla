@@ -1,6 +1,23 @@
 import { ISurveyComponent } from "../surveyComponentFactory";
 import * as t from "./actionTypes";
-import { IConfigurableQuestionProperties } from "./hooks";
+import {
+  IConfigurableQuestionProperties,
+  IConfigurableSurveyProperties,
+} from "./hooks";
+
+export interface IUpdateSurveyConfiguration {
+  type: t.T_UPDATE_SURVEY_CONFIGURATION;
+  surveyConfiguration: IConfigurableSurveyProperties;
+}
+
+export const updateSurveyConfiguration = (
+  surveyConfiguration: IConfigurableSurveyProperties
+): IUpdateSurveyConfiguration => {
+  return {
+    type: t.UPDATE_SURVEY_CONFIGURATION,
+    surveyConfiguration,
+  };
+};
 
 interface IAddSurveyQuestion {
   type: t.T_ADD_SURVEY_QUESTION;
@@ -9,6 +26,20 @@ interface IAddSurveyQuestion {
 export const addSurveyQuestion = (): IAddSurveyQuestion => {
   return {
     type: t.ADD_SURVEY_QUESTION,
+  };
+};
+
+interface IRemoveSurveyQuestion {
+  type: t.T_REMOVE_SURVEY_QUESTION;
+  questionIndex: number;
+}
+
+export const removeSurveyQuestion = (
+  questionIndex: number
+): IRemoveSurveyQuestion => {
+  return {
+    type: t.REMOVE_SURVEY_QUESTION,
+    questionIndex,
   };
 };
 
@@ -53,6 +84,8 @@ export const updateSurveyComponentConfiguration = (
 };
 
 export type Action =
+  | IUpdateSurveyConfiguration
   | IAddSurveyQuestion
+  | IRemoveSurveyQuestion
   | IUpdateSurveyQuestion
   | IUpdateSurveyComponentConfiguration;

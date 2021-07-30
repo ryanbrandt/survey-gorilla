@@ -5,7 +5,7 @@ import {
   SurveyComponentProps,
 } from "../../surveyComponentFactory";
 import { useSurveyComponentPersistence } from "../../persistence";
-import BaseComponentCreator from "../Creators/SingleLineInputComponentCreator";
+import TextareaInputCreator from "../Creators/TextareaInputCreator";
 
 export const TextAreaInput = ({
   component,
@@ -26,7 +26,7 @@ const TextareaInputComponentSchema: ISurveyComponentRegistry = {
   "textarea-input@1.0.0": {
     component: TextAreaInput,
     displayType: "Multiline Text Input",
-    creator: BaseComponentCreator,
+    creator: TextareaInputCreator,
   },
 };
 
