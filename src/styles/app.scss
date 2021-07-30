@@ -1,0 +1,11 @@
+@import "./common.scss";
+
+.root-container {
+  @media (min-width: $desktop-min-width) {
+    margin: 0vh 7.5vw 2vh 7.5vw;
+  }
+
+  @media (max-width: $mobile-max-width) {
+    margin: 5vh 7.5vw 2vh 7.5vw;
+  }
+}

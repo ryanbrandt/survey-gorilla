@@ -1,0 +1,96 @@
+$desktop-min-width: 1040px;
+$mobile-max-width: 1039px;
+
+$informed-gray: #506670c5;
+$informed-warn: rgba(201, 18, 18, 0.678);
+
+.flex {
+  display: flex;
+
+  &_center-row {
+    @extend .flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &_center-col {
+    @extend .flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+}
+
+.flex-fill {
+  flex: 1 1;
+}
+
+.app {
+  &-warning {
+    color: $informed-warn;
+  }
+
+  &_informed-dimmed {
+    fill: $informed-gray;
+    color: $informed-gray;
+    opacity: 0.75;
+  }
+
+  &-fade-in {
+    cursor: pointer;
+    transition: all 0.5s;
+
+    &:hover {
+      color: $informed-gray;
+      transition: all 0.5s;
+    }
+  }
+
+  &-opacity-in {
+    cursor: pointer;
+    opacity: 0.5;
+    transition: all 0.5s;
+
+    &:hover {
+      opacity: 1;
+      transition: all 0.5s;
+    }
+  }
+
+  &-link {
+    @extend .app-fade-in;
+
+    &:hover {
+      @extend .app-fade-in;
+      transform: scale(1.05);
+    }
+  }
+
+  &_error-screen {
+    @extend .flex_center-col;
+    flex-wrap: wrap;
+    margin: 50px;
+  }
+}
+
+.removable_badge {
+  &-remove-btn {
+    @extend .app-warning;
+    margin-left: 15px;
+    font-weight: 600;
+    width: fit-content;
+    cursor: pointer;
+  }
+}
+
+.dropdown_section {
+  &-header {
+    font-size: 32px;
+    font-weight: 600;
+    flex-wrap: wrap;
+  }
+
+  &-container {
+    padding: 25px 10px 25px 10px;
+  }
+}
