@@ -41,9 +41,7 @@ const SurveyDashboard = (): React.ReactElement => {
             },
           ]}
           onSearch={() => null}
-          onTab={(tabKey: string) =>
-            setActiveTab(tabKey as SURVEY_DASHBOARD_TABS)
-          }
+          onTab={() => null}
         />
         <Divider solid />
         <OwnedSurveyResults />

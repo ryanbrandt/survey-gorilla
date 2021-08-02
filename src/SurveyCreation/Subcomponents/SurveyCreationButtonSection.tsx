@@ -7,7 +7,7 @@ import { Button, LoadingOverlay, Row } from "handsome-ui";
 import { addSurveyQuestion, publishSurveyRequest } from "../actions";
 import { selectSurvey, selectSurveyCanBePublished } from "../selectors";
 
-const SurveyCreationButtonSection = () => {
+const SurveyCreationButtonSection = (): React.ReactElement => {
   const dispatch = useDispatch();
   const dispatchAddQuestion = () => dispatch(addSurveyQuestion());
 

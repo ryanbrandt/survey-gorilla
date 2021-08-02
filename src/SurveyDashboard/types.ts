@@ -11,3 +11,12 @@ export interface ISurveyQuestionAnswer {
     title: string;
   };
 }
+
+export interface IParsedAnswer {
+  user: string;
+  answer: string;
+}
+
+export interface ISurveyAnswersByQuestion {
+  [key: string]: Array<IParsedAnswer>;
+}

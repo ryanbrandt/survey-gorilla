@@ -1,4 +1,5 @@
 import { all, call, put, select, takeLatest } from "redux-saga/effects";
+import { ApiResponse } from "apisauce";
 
 import { RootState } from "../store/rootReducer";
 import api from "../utils/api";
@@ -15,7 +16,7 @@ export function* handleActiveSurveyResultsRequest() {
   );
 
   try {
-    const { data, ok }: { data: any; ok: boolean } = yield call(
+    const { data, ok }: ApiResponse<any> = yield call(
       api.get,
       `/Survey/${surveyId}/Answer`
     );
@@ -24,7 +25,7 @@ export function* handleActiveSurveyResultsRequest() {
       yield put(activeSurveyResultsSuccess(data));
     }
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 }
 
@@ -41,7 +42,7 @@ export function* handleListOwnedSurveysRequest(
   const { userId } = action;
 
   try {
-    const { data, ok }: { data: any; ok: boolean } = yield call(
+    const { data, ok }: ApiResponse<any> = yield call(
       api.get,
       `/User/${userId}/Survey`
     );
@@ -50,7 +51,7 @@ export function* handleListOwnedSurveysRequest(
       yield put(listOwnedSurveysSuccess(data));
     }
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 }
 

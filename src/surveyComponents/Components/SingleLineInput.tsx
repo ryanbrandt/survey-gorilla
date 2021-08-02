@@ -2,7 +2,8 @@ import { Input } from "handsome-ui";
 
 import { ISurveyComponentRegistry, SurveyComponentProps } from "..";
 import { useSurveyQuestionAnswer } from "../../SurveySubmission/hooks";
-import BaseComponentCreator from "../Creators/SingleLineInputComponentCreator";
+import { GENERIC_REQUIRED_ERROR } from "../../utils/constants";
+import SingleLineInputComponentCreator from "../Creators/SingleLineInputComponentCreator";
 
 interface SingleLinInputProps extends SurveyComponentProps {
   type: "text" | "number" | "date";
@@ -23,7 +24,13 @@ export const SingleLineInput = ({
   }
 
   return (
-    <Input help={help} type={type} value={parsedValue} onChange={setAnswer} />
+    <Input
+      help={help}
+      type={type}
+      value={parsedValue}
+      onChange={setAnswer}
+      error={!answer ? GENERIC_REQUIRED_ERROR : ""}
+    />
   );
 };
 
@@ -31,7 +38,7 @@ const SingleLineInputComponentSchema: ISurveyComponentRegistry = {
   "single-line-input@1.0.0": {
     component: SingleLineInput,
     displayType: "Single Line Input",
-    creator: BaseComponentCreator,
+    creator: SingleLineInputComponentCreator,
   },
 };
 

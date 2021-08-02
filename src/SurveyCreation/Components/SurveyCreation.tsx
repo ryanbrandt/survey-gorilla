@@ -1,8 +1,8 @@
 import { Input } from "handsome-ui";
 
-import { GENERIC_CREATION_ERROR } from "../constants";
+import { GENERIC_REQUIRED_ERROR } from "../../utils/constants";
 import { useSurveyConfiguration } from "../hooks";
-import { selectQuestions, selectSurveyId } from "../selectors";
+import { selectQuestions } from "../selectors";
 import SurveyCreationButtonSection from "../Subcomponents/SurveyCreationButtonSection";
 
 import SurveyQuestionCreation from "./SurveyQuestionCreation";
@@ -25,7 +25,7 @@ const SurveyCreation = (): React.ReactElement => {
         onChange={(value: string) =>
           setSurveyConfiguration({ ...surveyConfiguration, title: value })
         }
-        error={!title ? GENERIC_CREATION_ERROR : ""}
+        error={!title ? GENERIC_REQUIRED_ERROR : ""}
       />
       {questions.map((question, i) => (
         <SurveyQuestionCreation

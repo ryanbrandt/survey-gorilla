@@ -2,6 +2,7 @@ import { Column, Select, Input } from "handsome-ui";
 
 import { SurveyComponentProps } from "..";
 import { useSurveyQuestionComponentConfiguration } from "../../SurveyCreation/hooks";
+import { GENERIC_REQUIRED_ERROR } from "../../utils/constants";
 
 const SingleLineInputComponentCreator = ({
   component,
@@ -19,7 +20,7 @@ const SingleLineInputComponentCreator = ({
         options={["text", "number", "date"]}
         value={singleLineInputType}
         onChange={configureSingleLineInputType}
-        error={!singleLineInputType ? "This field is required" : ""}
+        error={!singleLineInputType ? GENERIC_REQUIRED_ERROR : ""}
       />
       <Input
         label="Help Text"

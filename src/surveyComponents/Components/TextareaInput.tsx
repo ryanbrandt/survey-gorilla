@@ -3,6 +3,7 @@ import { Text } from "handsome-ui";
 import { ISurveyComponentRegistry, SurveyComponentProps } from "..";
 
 import { useSurveyQuestionAnswer } from "../../SurveySubmission/hooks";
+import { GENERIC_REQUIRED_ERROR } from "../../utils/constants";
 import TextareaInputCreator from "../Creators/TextareaInputCreator";
 
 interface TextAreaInputProps extends SurveyComponentProps {
@@ -24,6 +25,7 @@ export const TextAreaInput = ({
       help={help}
       value={answer}
       onChange={setAnswer}
+      error={!answer ? GENERIC_REQUIRED_ERROR : ""}
     />
   );
 };

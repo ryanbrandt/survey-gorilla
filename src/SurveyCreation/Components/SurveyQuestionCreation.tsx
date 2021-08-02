@@ -9,9 +9,8 @@ import {
 } from "../../surveyComponents";
 import { ISurveyQuestionCreation } from "../types";
 import { useSurveyQuestionConfiguration } from "../hooks";
-import { GENERIC_CREATION_ERROR } from "../constants";
+import { GENERIC_REQUIRED_ERROR } from "../../utils/constants";
 import { selectQuestionCanBeRemoved } from "../selectors";
-
 import { removeSurveyQuestion } from "../actions";
 
 interface Props {
@@ -59,7 +58,7 @@ const SurveyQuestionCreation = ({
         label="Question Title*"
         value={title}
         onChange={(value: string) => handleConfigurationChange("title", value)}
-        error={!title ? GENERIC_CREATION_ERROR : ""}
+        error={!title ? GENERIC_REQUIRED_ERROR : ""}
       />
       <Select
         options={getAvailableSurveyComponentOptions()}
@@ -68,7 +67,7 @@ const SurveyQuestionCreation = ({
         onChange={(value: string) =>
           handleConfigurationChange("componentSchemaId", value)
         }
-        error={!componentSchemaId ? GENERIC_CREATION_ERROR : ""}
+        error={!componentSchemaId ? GENERIC_REQUIRED_ERROR : ""}
       />
       {componentSchemaId &&
         createElement(getSurveyComponentCreator(componentSchemaId), {

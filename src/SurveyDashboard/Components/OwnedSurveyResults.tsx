@@ -1,4 +1,4 @@
-import { Table, TableRow, TableCell, Dropdown } from "handsome-ui";
+import { Table, TableRow, TableCell } from "handsome-ui";
 import { useDispatch } from "react-redux";
 import { history } from "../../routes";
 import { setActiveSurvey } from "../actions";
@@ -24,7 +24,9 @@ const OwnedSurveyResults = (): React.ReactElement => {
           <TableCell>{survey.title}</TableCell>
           <TableCell>{`http://${host}/take/${survey.id}`}</TableCell>
           <TableCell>
-            <a onClick={() => onRowClick(survey.id)}>View Results</a>
+            <a className="app-link" onClick={() => onRowClick(survey.id)}>
+              View Results
+            </a>
           </TableCell>
         </TableRow>
       ))}

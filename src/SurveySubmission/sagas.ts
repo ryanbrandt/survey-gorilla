@@ -1,4 +1,6 @@
 import { all, call, put, takeLatest } from "redux-saga/effects";
+import { ApiResponse } from "apisauce";
+
 import api from "../utils/api";
 import {
   IRetrieveSurveyByIdRequest,
@@ -15,12 +17,12 @@ export function* handleSubmitSurveyRequest(action: ISubmitSurveyRequest) {
   const surveyAnswerPayload = questions.map((question) => ({
     values: { value: question.answer },
     // hardcoded to you@test.com for demoing
-    userId: "ae1c48b1-6a38-4e00-a453-3e36a3980f28",
+    userId: "9f42594b-6f69-4a5a-82b3-b482fe3494c0",
     questionId: question.id,
   }));
 
   try {
-    const { ok }: { ok: boolean } = yield call(
+    const { ok }: ApiResponse<any> = yield call(
       api.post,
       `/Survey/${survey.id}/Answer`,
       surveyAnswerPayload
@@ -31,7 +33,7 @@ export function* handleSubmitSurveyRequest(action: ISubmitSurveyRequest) {
       return;
     }
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 
   reject();
@@ -46,16 +48,13 @@ export function* handleRetrieveSurveyByIdRequest(
   const { id } = action;
 
   try {
-    const { data, ok }: { data: any; ok: boolean } = yield call(
-      api.get,
-      `/Survey/${id}`
-    );
+    const { data, ok }: ApiResponse<any> = yield call(api.get, `/Survey/${id}`);
 
     if (ok && data) {
       yield put(retrieveSurveyByIdSuccess(data));
     }
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 }
 

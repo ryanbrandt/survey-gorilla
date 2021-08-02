@@ -1,28 +1,24 @@
 import { all, call, takeLatest } from "redux-saga/effects";
+import { ApiResponse } from "apisauce";
 
 import { IPublishSurveyRequest } from "./actions";
 import * as t from "./actionTypes";
-
 import api from "../utils/api";
 
 export function* handlePublishSurveyRequest(action: IPublishSurveyRequest) {
   const { survey, resolve, reject } = action;
 
-  let success = false;
   try {
-    const { ok }: { ok: boolean } = yield call(api.post, "/Survey", survey);
+    const { ok }: ApiResponse<any> = yield call(api.post, "/Survey", survey);
     if (ok) {
-      success = true;
+      resolve();
+      return;
     }
   } catch (e) {
     console.error(`Failed to complete survey publish request ${e}`);
   }
 
-  if (success) {
-    resolve();
-  } else {
-    reject();
-  }
+  reject();
 }
 
 export function* watchPublishSurveyRequest() {
