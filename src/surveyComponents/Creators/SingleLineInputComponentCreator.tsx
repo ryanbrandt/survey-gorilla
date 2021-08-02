@@ -1,6 +1,6 @@
 import { Column, Select, Input } from "handsome-ui";
 
-import { SurveyComponentProps } from "../../surveyComponentFactory";
+import { SurveyComponentProps } from "..";
 import { useSurveyQuestionComponentConfiguration } from "../../SurveyCreation/hooks";
 
 const SingleLineInputComponentCreator = ({
@@ -8,6 +8,9 @@ const SingleLineInputComponentCreator = ({
 }: SurveyComponentProps): JSX.Element => {
   const [singleLineInputType, configureSingleLineInputType] =
     useSurveyQuestionComponentConfiguration("type", component, "", true);
+
+  const [singleLineInputHelpText, configureSingleInputHelpText] =
+    useSurveyQuestionComponentConfiguration("help", component, "");
 
   return (
     <Column>
@@ -17,6 +20,11 @@ const SingleLineInputComponentCreator = ({
         value={singleLineInputType}
         onChange={configureSingleLineInputType}
         error={!singleLineInputType ? "This field is required" : ""}
+      />
+      <Input
+        label="Help Text"
+        value={singleLineInputHelpText}
+        onChange={configureSingleInputHelpText}
       />
     </Column>
   );

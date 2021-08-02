@@ -10,7 +10,7 @@ export enum MENU_OPTION {
 }
 
 const AppSideMenu = (): React.ReactElement => {
-  const DASHBOARD_REGEX = /^\/dashboard$/;
+  const DASHBOARD_REGEX = /^\/$/;
   const CREATION_REGEX = /^\/create-survey$/;
 
   const computeActiveMenuItem = (): MENU_OPTION | null => {

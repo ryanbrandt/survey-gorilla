@@ -1,42 +1,29 @@
 import { Input } from "handsome-ui";
 
-import {
-  ISurveyComponentRegistry,
-  SurveyComponentProps,
-} from "../../surveyComponentFactory";
-import { useSurveyComponentPersistence } from "../../persistence";
+import { ISurveyComponentRegistry, SurveyComponentProps } from "..";
+import { useSurveyQuestionAnswer } from "../../SurveySubmission/hooks";
 import BaseComponentCreator from "../Creators/SingleLineInputComponentCreator";
 
 interface SingleLinInputProps extends SurveyComponentProps {
   type: "text" | "number" | "date";
-  placeholder?: string;
+  help?: string;
 }
 
 export const SingleLineInput = ({
   component,
   ...props
 }: SingleLinInputProps): JSX.Element => {
-  const [value, setPersistedValue] = useSurveyComponentPersistence<string>(
-    "value",
-    component,
-    ""
-  );
+  const [answer, setAnswer] = useSurveyQuestionAnswer(component.questionId, "");
 
-  const { label, type, placeholder } = props;
+  const { type, help } = props;
 
-  let parsedValue: string | number = value;
+  let parsedValue: string | number = answer;
   if (type === "number") {
-    parsedValue = parseInt(value, 10);
+    parsedValue = parseInt(answer || "0", 10);
   }
 
   return (
-    <Input
-      label={label}
-      placeholder={placeholder}
-      type={type}
-      value={parsedValue}
-      onChange={setPersistedValue}
-    />
+    <Input help={help} type={type} value={parsedValue} onChange={setAnswer} />
   );
 };
 

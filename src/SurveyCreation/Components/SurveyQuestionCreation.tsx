@@ -1,13 +1,13 @@
 import { createElement } from "react";
 import { useDispatch } from "react-redux";
 
-import { Select, Input, RadioButton, Trash, Button } from "handsome-ui";
+import { Select, Input, Trash, Button } from "handsome-ui";
 
 import {
   getAvailableSurveyComponentOptions,
   getSurveyComponentCreator,
-} from "../../surveyComponentFactory";
-import { ISurveyQuestionCreation } from "../reducer";
+} from "../../surveyComponents";
+import { ISurveyQuestionCreation } from "../types";
 import { useSurveyQuestionConfiguration } from "../hooks";
 import { GENERIC_CREATION_ERROR } from "../constants";
 import { selectQuestionCanBeRemoved } from "../selectors";
@@ -15,29 +15,27 @@ import { selectQuestionCanBeRemoved } from "../selectors";
 import { removeSurveyQuestion } from "../actions";
 
 interface Props {
-  surveyId: string;
   question: ISurveyQuestionCreation;
   index: number;
 }
 
 const SurveyQuestionCreation = ({
-  surveyId,
   question,
   index,
 }: Props): React.ReactElement => {
-  const { questionId } = question;
+  const { id } = question;
 
-  const [configuration, setQuestionConfiguration] =
-    useSurveyQuestionConfiguration(questionId);
+  const [componentConfiguration, setQuestionConfiguration] =
+    useSurveyQuestionConfiguration(id);
 
-  const { surveyComponentSchemaId, questionTitle, required } = configuration;
+  const { componentSchemaId, title } = componentConfiguration;
 
   const handleConfigurationChange = (
     configurationKey: string,
     configurationValue: any
   ) => {
     setQuestionConfiguration({
-      ...configuration,
+      ...componentConfiguration,
       [configurationKey]: configurationValue,
     });
   };
@@ -57,34 +55,26 @@ const SurveyQuestionCreation = ({
         round
         inverting
       />
-      <RadioButton
-        label="Required?"
-        checked={required}
-        onClick={() => handleConfigurationChange("required", !required)}
-      />
       <Input
         label="Question Title*"
-        value={questionTitle}
-        onChange={(value: string) =>
-          handleConfigurationChange("questionTitle", value)
-        }
-        error={!questionTitle ? GENERIC_CREATION_ERROR : ""}
+        value={title}
+        onChange={(value: string) => handleConfigurationChange("title", value)}
+        error={!title ? GENERIC_CREATION_ERROR : ""}
       />
       <Select
         options={getAvailableSurveyComponentOptions()}
         label="Select Survey Question Type*"
-        value={surveyComponentSchemaId}
+        value={componentSchemaId}
         onChange={(value: string) =>
-          handleConfigurationChange("surveyComponentSchemaId", value)
+          handleConfigurationChange("componentSchemaId", value)
         }
-        error={!surveyComponentSchemaId ? GENERIC_CREATION_ERROR : ""}
+        error={!componentSchemaId ? GENERIC_CREATION_ERROR : ""}
       />
-      {surveyComponentSchemaId &&
-        createElement(getSurveyComponentCreator(surveyComponentSchemaId), {
+      {componentSchemaId &&
+        createElement(getSurveyComponentCreator(componentSchemaId), {
           component: {
-            surveyComponentSchemaId,
-            questionId,
-            surveyId,
+            componentSchemaId,
+            questionId: id,
           },
         })}
     </div>

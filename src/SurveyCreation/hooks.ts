@@ -1,28 +1,21 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
-import { ISurveyComponent } from "../surveyComponentFactory";
+import { ISurveyComponent } from "../surveyComponents";
 import {
   updateSurveyComponentConfiguration,
   updateSurveyConfiguration,
   updateSurveyQuestion,
 } from "./actions";
-import { ISurveyCreationState, ISurveyQuestionCreation } from "./reducer";
+import {
+  IConfigurableQuestionProperties,
+  IConfigurableSurveyProperties,
+} from "./types";
 import {
   selectQuestionById,
   selectQuestionComponentConfiguration,
   selectSurvey,
 } from "./selectors";
-
-export type IConfigurableQuestionProperties = Omit<
-  ISurveyQuestionCreation,
-  "questionId"
->;
-
-export type IConfigurableSurveyProperties = Pick<
-  ISurveyCreationState,
-  "surveyTitle"
->;
 
 type SurveyConfigurationSetter = (
   surveyConfiguration: IConfigurableSurveyProperties
@@ -44,9 +37,9 @@ export const useSurveyConfiguration = (
   ) => dispatch(updateSurveyConfiguration(newSurveyConfiguration));
 
   useEffect(() => {
-    const { surveyId, questions, ...configuration } = survey;
+    const { id, questions, ...componentConfiguration } = survey;
 
-    setSurveyConfiguration(configuration);
+    setSurveyConfiguration(componentConfiguration);
   }, [survey]);
 
   return [surveyConfiguration, dispatchSurveyConfigurationUpdate];
@@ -57,22 +50,21 @@ type SurveyQuestionConfigurationSetter = (
 ) => void;
 
 export const useSurveyQuestionConfiguration = (
-  questionId: string
+  id: string
 ): [IConfigurableQuestionProperties, SurveyQuestionConfigurationSetter] => {
-  const question = selectQuestionById(questionId);
+  const question = selectQuestionById(id);
 
   const _getQuestionConfiguration = (
     question?: IConfigurableQuestionProperties
   ): IConfigurableQuestionProperties => {
     return {
-      questionTitle: question?.questionTitle ?? "",
-      required: question?.required || false,
-      surveyComponentSchemaId: question?.surveyComponentSchemaId ?? "",
-      configuration: question?.configuration ?? [],
+      title: question?.title ?? "",
+      componentSchemaId: question?.componentSchemaId ?? "",
+      componentConfiguration: question?.componentConfiguration ?? [],
     };
   };
 
-  const [configuration, setConfiguration] =
+  const [componentConfiguration, setConfiguration] =
     useState<IConfigurableQuestionProperties>(
       _getQuestionConfiguration(question)
     );
@@ -86,10 +78,10 @@ export const useSurveyQuestionConfiguration = (
   const dispatchConfigurationUpdate = (
     newConfiguration: IConfigurableQuestionProperties
   ) => {
-    dispatch(updateSurveyQuestion(questionId, newConfiguration));
+    dispatch(updateSurveyQuestion(id, newConfiguration));
   };
 
-  return [configuration, dispatchConfigurationUpdate];
+  return [componentConfiguration, dispatchConfigurationUpdate];
 };
 
 type SurveyQuestionComponentConfigurationSetter<T> = (value: T) => void;
@@ -117,20 +109,20 @@ export const useSurveyQuestionComponentConfiguration = <T>(
   const [configurationFieldValue, setConfigurationFieldValue] =
     useState<T>(defaultValue);
 
-  const configuration = selectQuestionComponentConfiguration(
+  const componentConfiguration = selectQuestionComponentConfiguration(
     component.questionId,
     fieldName
   );
 
   useEffect(() => {
-    dispatchComponentConfigurationFieldUpdate(configurationFieldValue);
+    dispatchComponentConfigurationFieldUpdate(defaultValue);
   }, []);
 
   useEffect(() => {
-    if (configuration) {
-      setConfigurationFieldValue(configuration.value);
+    if (componentConfiguration) {
+      setConfigurationFieldValue(componentConfiguration.value as T);
     }
-  }, [configuration]);
+  }, [componentConfiguration]);
 
   return [configurationFieldValue, dispatchComponentConfigurationFieldUpdate];
 };

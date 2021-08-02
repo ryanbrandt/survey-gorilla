@@ -9,12 +9,11 @@ import SurveyQuestionCreation from "./SurveyQuestionCreation";
 
 const SurveyCreation = (): React.ReactElement => {
   const [surveyConfiguration, setSurveyConfiguration] = useSurveyConfiguration({
-    surveyTitle: "",
+    title: "",
   });
 
-  const { surveyTitle } = surveyConfiguration;
+  const { title } = surveyConfiguration;
 
-  const surveyId = selectSurveyId();
   const questions = selectQuestions();
 
   return (
@@ -22,17 +21,16 @@ const SurveyCreation = (): React.ReactElement => {
       <h1>Create a New Survey</h1>
       <Input
         label="Survey Title*"
-        value={surveyTitle}
+        value={title}
         onChange={(value: string) =>
-          setSurveyConfiguration({ ...surveyConfiguration, surveyTitle: value })
+          setSurveyConfiguration({ ...surveyConfiguration, title: value })
         }
-        error={!surveyTitle ? GENERIC_CREATION_ERROR : ""}
+        error={!title ? GENERIC_CREATION_ERROR : ""}
       />
       {questions.map((question, i) => (
         <SurveyQuestionCreation
-          key={question.questionId}
+          key={question.id}
           index={i}
-          surveyId={surveyId}
           question={question}
         />
       ))}

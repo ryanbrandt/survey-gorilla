@@ -2,11 +2,10 @@ import { useMemo } from "react";
 import { useSelector } from "react-redux";
 
 import { RootState } from "../store/rootReducer";
-import {
-  ISurveyCreationState,
-  ISurveyQuestionComponentConfiguration,
-  ISurveyQuestionCreation,
-} from "./reducer";
+import { ISurveyQuestionComponentConfiguration } from "../types/Question";
+import { ISurveyCreationState } from "./reducer";
+
+import { ISurveyQuestionCreation } from "./types";
 
 export const selectSurvey = (): ISurveyCreationState =>
   useSelector((state: RootState) => state.surveyCreation);
@@ -14,27 +13,27 @@ export const selectSurvey = (): ISurveyCreationState =>
 export const selectSurveyId = (): string => {
   const survey = selectSurvey();
 
-  return useMemo(() => survey.surveyId, [survey]);
+  return useMemo(() => survey.id, [survey]);
 };
 
 export const selectSurveyCanBePublished = (): boolean => {
   const survey = selectSurvey();
 
   return useMemo(() => {
-    if (!survey.surveyTitle) {
+    if (!survey.title) {
       return false;
     }
 
     const { questions } = survey;
 
     for (const question of questions) {
-      if (!question.surveyComponentSchemaId || !question.questionTitle) {
+      if (!question.componentSchemaId || !question.title) {
         return false;
       }
 
-      const { configuration } = question;
+      const { componentConfiguration } = question;
 
-      for (const configurationItem of configuration) {
+      for (const configurationItem of componentConfiguration) {
         if (configurationItem.required && !configurationItem.value) {
           return false;
         }
@@ -60,24 +59,24 @@ export const selectQuestionById = (
   const questions = selectQuestions();
 
   return useMemo(
-    () => questions.find((question) => question.questionId === id),
+    () => questions.find((question) => question.id === id),
     [questions, id]
   );
 };
 
 export const selectQuestionComponentConfiguration = (
-  questionId: string,
+  id: string,
   fieldName: string
-): ISurveyQuestionComponentConfiguration<any> | undefined => {
-  const question = selectQuestionById(questionId);
+): ISurveyQuestionComponentConfiguration<unknown> | undefined => {
+  const question = selectQuestionById(id);
 
-  const configuration = question?.configuration || [];
+  const componentConfiguration = question?.componentConfiguration || [];
 
   return useMemo(
     () =>
-      configuration.find(
+      componentConfiguration.find(
         (configurationItem) => configurationItem.name === fieldName
       ),
-    [configuration]
+    [componentConfiguration]
   );
 };

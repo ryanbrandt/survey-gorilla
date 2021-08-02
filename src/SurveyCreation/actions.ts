@@ -1,9 +1,10 @@
-import { ISurveyComponent } from "../surveyComponentFactory";
+import { ISurveyComponent } from "../surveyComponents";
 import * as t from "./actionTypes";
 import {
   IConfigurableQuestionProperties,
   IConfigurableSurveyProperties,
-} from "./hooks";
+} from "./types";
+import { ISurveyCreationState } from "./reducer";
 
 export interface IUpdateSurveyConfiguration {
   type: t.T_UPDATE_SURVEY_CONFIGURATION;
@@ -19,7 +20,7 @@ export const updateSurveyConfiguration = (
   };
 };
 
-interface IAddSurveyQuestion {
+export interface IAddSurveyQuestion {
   type: t.T_ADD_SURVEY_QUESTION;
 }
 
@@ -29,7 +30,7 @@ export const addSurveyQuestion = (): IAddSurveyQuestion => {
   };
 };
 
-interface IRemoveSurveyQuestion {
+export interface IRemoveSurveyQuestion {
   type: t.T_REMOVE_SURVEY_QUESTION;
   questionIndex: number;
 }
@@ -43,24 +44,24 @@ export const removeSurveyQuestion = (
   };
 };
 
-interface IUpdateSurveyQuestion {
+export interface IUpdateSurveyQuestion {
   type: t.T_UPDATE_SURVEY_QUESTION;
-  questionId: string;
-  configuration: IConfigurableQuestionProperties;
+  id: string;
+  componentConfiguration: IConfigurableQuestionProperties;
 }
 
 export const updateSurveyQuestion = (
-  questionId: string,
-  configuration: IConfigurableQuestionProperties
+  id: string,
+  componentConfiguration: IConfigurableQuestionProperties
 ): IUpdateSurveyQuestion => {
   return {
     type: t.UPDATE_SURVEY_QUESTION,
-    questionId,
-    configuration,
+    id,
+    componentConfiguration,
   };
 };
 
-interface IUpdateSurveyComponentConfiguration {
+export interface IUpdateSurveyComponentConfiguration {
   type: t.T_UPDATE_SURVEY_COMPONENT_CONFIGURATION;
   component: ISurveyComponent;
   fieldName: string;
@@ -80,6 +81,26 @@ export const updateSurveyComponentConfiguration = (
     fieldName,
     value,
     required,
+  };
+};
+
+export interface IPublishSurveyRequest {
+  type: t.T_PUBLISH_SURVEY_REQUEST;
+  survey: ISurveyCreationState;
+  resolve: any;
+  reject: any;
+}
+
+export const publishSurveyRequest = (
+  survey: ISurveyCreationState,
+  resolve: any,
+  reject: any
+): IPublishSurveyRequest => {
+  return {
+    type: t.PUBLISH_SURVEY_REQUEST,
+    survey,
+    resolve,
+    reject,
   };
 };
 

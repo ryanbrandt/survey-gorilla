@@ -3,36 +3,23 @@ import { v4 } from "uuid";
 import * as t from "./actionTypes";
 import { Action } from "./actions";
 
-export interface ISurveyQuestionComponentConfiguration<T> {
-  name: string;
-  value: T;
-  required: boolean;
-}
-
-export interface ISurveyQuestionCreation {
-  questionId: string;
-  questionTitle: string;
-  surveyComponentSchemaId: string;
-  required: boolean;
-  configuration: Array<ISurveyQuestionComponentConfiguration<any>>;
-}
+import { ISurveyQuestionCreation } from "./types";
 
 export interface ISurveyCreationState {
-  surveyId: string;
-  surveyTitle: string;
+  id: string;
+  title: string;
   questions: Array<ISurveyQuestionCreation>;
 }
 
 const initialState: ISurveyCreationState = {
-  surveyId: v4(),
-  surveyTitle: "",
+  id: v4(),
+  title: "",
   questions: [
     {
-      questionId: v4(),
-      questionTitle: "",
-      required: true,
-      surveyComponentSchemaId: "",
-      configuration: [],
+      id: v4(),
+      title: "",
+      componentSchemaId: "",
+      componentConfiguration: [],
     },
   ],
 };
@@ -53,11 +40,10 @@ export default function (
 
     case t.ADD_SURVEY_QUESTION: {
       const newQuestion: ISurveyQuestionCreation = {
-        questionId: v4(),
-        questionTitle: "",
-        required: true,
-        surveyComponentSchemaId: "",
-        configuration: [],
+        id: v4(),
+        title: "",
+        componentSchemaId: "",
+        componentConfiguration: [],
       };
 
       return {
@@ -80,10 +66,10 @@ export default function (
     }
 
     case t.UPDATE_SURVEY_QUESTION: {
-      const { configuration, questionId } = action;
+      const { componentConfiguration, id } = action;
 
       const updatedQuestionIndex = state.questions.findIndex(
-        (question) => question.questionId === questionId
+        (question) => question.id === id
       );
 
       const newQuestions = [...state.questions];
@@ -91,18 +77,19 @@ export default function (
         const previousQuestionConfiguration =
           newQuestions[updatedQuestionIndex];
 
-        let questionComponentConfiguration = configuration.configuration;
+        let questionComponentConfiguration =
+          componentConfiguration.componentConfiguration;
         if (
-          configuration.surveyComponentSchemaId !==
-          previousQuestionConfiguration.surveyComponentSchemaId
+          componentConfiguration.componentSchemaId !==
+          previousQuestionConfiguration.componentSchemaId
         ) {
           questionComponentConfiguration = [];
         }
 
         newQuestions[updatedQuestionIndex] = {
           ...newQuestions[updatedQuestionIndex],
-          ...configuration,
-          configuration: questionComponentConfiguration,
+          ...componentConfiguration,
+          componentConfiguration: questionComponentConfiguration,
         };
       }
 
@@ -117,19 +104,19 @@ export default function (
       const { questionId } = component;
 
       const updatedQuestionIndex = state.questions.findIndex(
-        (question) => question.questionId === questionId
+        (question) => question.id === questionId
       );
 
       const newQuestions = [...state.questions];
       if (updatedQuestionIndex > -1) {
         const question = state.questions[updatedQuestionIndex];
-        const { configuration } = question;
+        const { componentConfiguration } = question;
 
-        const updatedConfigurationFieldIndex = configuration.findIndex(
+        const updatedConfigurationFieldIndex = componentConfiguration.findIndex(
           (configurationItem) => configurationItem.name === fieldName
         );
 
-        const newConfiguration = [...configuration];
+        const newConfiguration = [...componentConfiguration];
         if (updatedConfigurationFieldIndex > -1) {
           newConfiguration[updatedConfigurationFieldIndex] = {
             ...newConfiguration[updatedConfigurationFieldIndex],
@@ -141,7 +128,7 @@ export default function (
 
         newQuestions[updatedQuestionIndex] = {
           ...newQuestions[updatedQuestionIndex],
-          configuration: newConfiguration,
+          componentConfiguration: newConfiguration,
         };
       }
 

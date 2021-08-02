@@ -1,19 +1,16 @@
 import React from "react";
 
-import SingleLineInputComponentSchema from "../surveyComponents/Components/SingleLineInput";
-import TextareaInputComponentSchema from "../surveyComponents/Components/TextareaInput";
+import { ISurveyQuestionComponentConfiguration } from "../types/Question";
+import SingleLineInputComponentSchema from "./Components/SingleLineInput";
+import TextareaInputComponentSchema from "./Components/TextareaInput";
 
 export interface ISurveyComponent {
-  surveyComponentSchemaId: string;
-  surveyId: string;
+  componentSchemaId: string;
   questionId: string;
 }
 
 export interface SurveyComponentProps {
   component: ISurveyComponent;
-
-  label?: string;
-  required?: boolean;
 }
 
 interface ISurveyComponentRegistryEntry {
@@ -37,12 +34,10 @@ export const getAvailableSurveyComponentOptions = (): {
   label: string;
   value: string;
 }[] => {
-  return Object.keys(surveyComponentRegistry).map(
-    (surveyComponentSchemaId) => ({
-      label: surveyComponentRegistry[surveyComponentSchemaId].displayType,
-      value: surveyComponentSchemaId,
-    })
-  );
+  return Object.keys(surveyComponentRegistry).map((componentSchemaId) => ({
+    label: surveyComponentRegistry[componentSchemaId].displayType,
+    value: componentSchemaId,
+  }));
 };
 
 export const getSurveyComponentCreator = (
@@ -51,11 +46,19 @@ export const getSurveyComponentCreator = (
   return surveyComponentRegistry[surveyComponentSchemaId].creator;
 };
 
+export const surveyQuestionComponentConfigurationToProps = (
+  configuration: Array<ISurveyQuestionComponentConfiguration<unknown>>
+): object =>
+  configuration.reduce(
+    (props, config) => ({ ...props, [config.name]: config.value }),
+    {}
+  );
+
 const surveyComponentFactory = (
   component: ISurveyComponent
 ): React.ComponentType<SurveyComponentProps & any> | undefined => {
   const entry: ISurveyComponentRegistryEntry | undefined =
-    surveyComponentRegistry[component.surveyComponentSchemaId];
+    surveyComponentRegistry[component.componentSchemaId];
 
   if (entry) {
     return entry.component;

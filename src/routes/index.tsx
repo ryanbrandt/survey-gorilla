@@ -5,17 +5,24 @@ import { createBrowserHistory } from "history";
 
 import SurveyCreation from "../SurveyCreation/Components/SurveyCreation";
 import SurveyDashboard from "../SurveyDashboard/Components/SurveyDashboard";
+import SurveySubmission from "../SurveySubmission/Components/SurveySubmission";
+import SurveyAnswerResults from "../SurveyDashboard/Components/SurveyAnswerResults";
 
 export const history = createBrowserHistory();
 
 export enum ROUTES {
-  dashboard = "/dashboard",
+  dashboard = "/",
   creation = "/create-survey",
+  submission = "/take/:id",
+  results = "/results/:id",
 }
 
 export default (
   <Switch>
-    <Route path={ROUTES.creation} component={SurveyCreation} />
-    <Route path={ROUTES.dashboard} component={SurveyDashboard} />
+    <Route exact path={ROUTES.creation} component={SurveyCreation} />
+    <Route exact path={ROUTES.submission} component={SurveySubmission} />
+    <Route exact path={ROUTES.results} component={SurveyAnswerResults} />
+
+    <Route path="*" component={SurveyDashboard} />
   </Switch>
 );
