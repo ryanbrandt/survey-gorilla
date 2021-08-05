@@ -4,6 +4,12 @@ $mobile-max-width: 1039px;
 $informed-gray: #506670c5;
 $informed-warn: rgba(201, 18, 18, 0.678);
 
+.message_section {
+  &-container {
+    padding: 20px;
+  }
+}
+
 .flex {
   display: flex;
 
@@ -28,6 +34,10 @@ $informed-warn: rgba(201, 18, 18, 0.678);
 .app {
   &-warning {
     color: $informed-warn;
+  }
+
+  &-success {
+    color: rgb(144, 211, 144);
   }
 
   &_informed-dimmed {

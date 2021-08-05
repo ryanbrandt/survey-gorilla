@@ -7,7 +7,11 @@ import { Button, LoadingOverlay } from "handsome-ui";
 import { retrieveSurveyByIdRequest, submitSurveyRequest } from "../actions";
 import { usePathParameters } from "../hooks";
 import { selectSurveyCanBeSubmitted, selectSurveyToTake } from "../selectors";
+import { ONE_SECOND_MS } from "../../utils/constants";
+
 import SurveyQuestionDisplay from "../Subcomponents/SurveyQuestionDisplay";
+import ErrorAndSuccessSection from "../../common/Components/ErrorAndSuccessSection";
+import { usePromisifedDispatch } from "../../utils/hooks";
 
 const SurveySubmission = (): React.ReactElement => {
   const pathParameters = usePathParameters<{ id: string }>();
@@ -25,17 +29,21 @@ const SurveySubmission = (): React.ReactElement => {
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
   const [successMessage, setSuccessMessage] = useState<string | undefined>();
 
-  const onSurveySubmission = debounce(async (): Promise<void> => {
-    if (survey) {
+  const onSurveySubmission = usePromisifedDispatch(submitSurveyRequest, {
+    onStart: () => {
       setProcessing(true);
-      await new Promise((resolve, reject) => {
-        dispatch(submitSurveyRequest(survey, resolve, reject));
-      })
-        .then(() => setSuccessMessage("Successfully submitted answers!"))
-        .catch(() => setErrorMessage("Failed to submit answers"))
-        .finally(() => setProcessing(false));
-    }
-  }, 500);
+      setSuccessMessage(undefined);
+      setErrorMessage(undefined);
+    },
+    onThen: () => setSuccessMessage("Successfully submitted answers!"),
+    onError: () => setErrorMessage("Failed to submit answers"),
+    onEnd: () => setProcessing(false),
+  });
+
+  const onDebouncedSurveySubmission = debounce(
+    onSurveySubmission,
+    ONE_SECOND_MS / 2
+  );
 
   if (!survey) {
     return (
@@ -55,13 +63,15 @@ const SurveySubmission = (): React.ReactElement => {
       ))}
       <Button
         title="Submit Answers"
-        onClick={onSurveySubmission}
+        onClick={onDebouncedSurveySubmission}
         disabled={!canSubmit}
         round
         inverting
       />
-      {successMessage && <label>{successMessage}</label>}
-      {errorMessage && <label>{errorMessage}</label>}
+      <ErrorAndSuccessSection
+        successMessage={successMessage}
+        errorMessage={errorMessage}
+      />
       <LoadingOverlay show={processing} message="Submitting Answers..." />
     </div>
   );

@@ -1,4 +1,4 @@
-import { Column, Input } from "handsome-ui";
+import { Input } from "handsome-ui";
 
 import { SurveyComponentProps } from "..";
 import { useSurveyQuestionComponentConfiguration } from "../../SurveyCreation/hooks";
@@ -12,7 +12,7 @@ const TextareaInputCreator = ({
     useSurveyQuestionComponentConfiguration("help", component, "");
 
   return (
-    <Column>
+    <>
       <Input
         label="Placeholder"
         value={textareaInputPlaceholder}
@@ -23,7 +23,7 @@ const TextareaInputCreator = ({
         value={textareaHelpText}
         onChange={configureTextareaHelpText}
       />
-    </Column>
+    </>
   );
 };
 

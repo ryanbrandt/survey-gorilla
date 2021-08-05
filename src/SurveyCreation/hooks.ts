@@ -56,13 +56,11 @@ export const useSurveyQuestionConfiguration = (
 
   const _getQuestionConfiguration = (
     question?: IConfigurableQuestionProperties
-  ): IConfigurableQuestionProperties => {
-    return {
-      title: question?.title ?? "",
-      componentSchemaId: question?.componentSchemaId ?? "",
-      componentConfiguration: question?.componentConfiguration ?? [],
-    };
-  };
+  ): IConfigurableQuestionProperties => ({
+    title: question?.title ?? "",
+    componentSchemaId: question?.componentSchemaId ?? "",
+    componentConfiguration: question?.componentConfiguration ?? [],
+  });
 
   const [componentConfiguration, setConfiguration] =
     useState<IConfigurableQuestionProperties>(

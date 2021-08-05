@@ -16,7 +16,7 @@ export const selectSurveyQuestionAnswer = <T>(
     if (survey) {
       const { questions } = survey;
 
-      const question = questions.find((question) => question.id === questionId);
+      const question = questions.find((q) => q.id === questionId);
 
       if (question) {
         return question.answer as T;
@@ -35,6 +35,7 @@ export const selectSurveyCanBeSubmitted = (): boolean => {
       const { questions } = survey;
 
       let canSubmit = true;
+      // eslint-disable-next-line no-restricted-syntax
       for (const question of questions) {
         const { answer } = question;
         if (answer === undefined || answer === null || answer === "") {

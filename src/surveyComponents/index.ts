@@ -1,5 +1,3 @@
-import React from "react";
-
 import { ISurveyQuestionComponentConfiguration } from "../types/Question";
 import SingleLineInputComponentSchema from "./Components/SingleLineInput";
 import TextareaInputComponentSchema from "./Components/TextareaInput";
@@ -33,20 +31,13 @@ const surveyComponentRegistry: ISurveyComponentRegistry = {
 export const getAvailableSurveyComponentOptions = (): {
   label: string;
   value: string;
-}[] => {
-  return Object.keys(surveyComponentRegistry).map((componentSchemaId) => ({
+}[] =>
+  Object.keys(surveyComponentRegistry).map((componentSchemaId) => ({
     label: surveyComponentRegistry[componentSchemaId].displayType,
     value: componentSchemaId,
   }));
-};
 
-export const getSurveyComponentCreator = (
-  surveyComponentSchemaId: string
-): React.ComponentType<any> => {
-  return surveyComponentRegistry[surveyComponentSchemaId].creator;
-};
-
-export const surveyQuestionComponentConfigurationToProps = (
+export const componentConfigurationToProps = (
   configuration: Array<ISurveyQuestionComponentConfiguration<unknown>>
 ): object =>
   configuration.reduce(
@@ -54,11 +45,11 @@ export const surveyQuestionComponentConfigurationToProps = (
     {}
   );
 
-const surveyComponentFactory = (
-  component: ISurveyComponent
+export const surveyComponentFactory = (
+  componentSchemaId: string
 ): React.ComponentType<SurveyComponentProps & any> | undefined => {
   const entry: ISurveyComponentRegistryEntry | undefined =
-    surveyComponentRegistry[component.componentSchemaId];
+    surveyComponentRegistry[componentSchemaId];
 
   if (entry) {
     return entry.component;
@@ -67,4 +58,15 @@ const surveyComponentFactory = (
   return undefined;
 };
 
-export default surveyComponentFactory;
+export const surveyComponentCreatorFactory = (
+  componentSchemaId: string
+): React.ComponentType<any> | undefined => {
+  const entry: ISurveyComponentRegistryEntry | undefined =
+    surveyComponentRegistry[componentSchemaId];
+
+  if (entry) {
+    return entry.creator;
+  }
+
+  return undefined;
+};

@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { all, call, put, select, takeLatest } from "redux-saga/effects";
 import { ApiResponse } from "apisauce";
 
 import { RootState } from "../store/rootReducer";
-import api from "../utils/api";
 import {
   activeSurveyResultsSuccess,
   IListOwnedSurveysRequest,
@@ -10,18 +10,22 @@ import {
 } from "./actions";
 import * as t from "./actionTypes";
 
+import api from "../utils/api";
+import { ISurveyQuestionAnswer } from "./types";
+import { ISurvey } from "../types/Survey";
+
 export function* handleActiveSurveyResultsRequest() {
   const surveyId: string = yield select(
     (state: RootState) => state.surveyDashboard.activeSurvey
   );
 
   try {
-    const { data, ok }: ApiResponse<any> = yield call(
+    const { data, ok }: ApiResponse<Array<ISurveyQuestionAnswer>> = yield call(
       api.get,
       `/Survey/${surveyId}/Answer`
     );
 
-    if (ok) {
+    if (ok && data) {
       yield put(activeSurveyResultsSuccess(data));
     }
   } catch (e) {
@@ -42,7 +46,7 @@ export function* handleListOwnedSurveysRequest(
   const { userId } = action;
 
   try {
-    const { data, ok }: ApiResponse<any> = yield call(
+    const { data, ok }: ApiResponse<Array<ISurvey>> = yield call(
       api.get,
       `/User/${userId}/Survey`
     );

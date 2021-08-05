@@ -5,7 +5,11 @@ import { debounce } from "lodash";
 import { Button, LoadingOverlay, Row } from "handsome-ui";
 
 import { addSurveyQuestion, publishSurveyRequest } from "../actions";
-import { selectSurvey, selectSurveyCanBePublished } from "../selectors";
+import { selectSurveyCanBePublished } from "../selectors";
+import { ONE_SECOND_MS } from "../../utils/constants";
+
+import ErrorAndSuccessSection from "../../common/Components/ErrorAndSuccessSection";
+import { usePromisifedDispatch } from "../../utils/hooks";
 
 const SurveyCreationButtonSection = (): React.ReactElement => {
   const dispatch = useDispatch();
@@ -16,18 +20,22 @@ const SurveyCreationButtonSection = (): React.ReactElement => {
   const [successMessage, setSuccessMessage] = useState<string | undefined>();
 
   const canPublish = selectSurveyCanBePublished();
-  const survey = selectSurvey();
 
-  const onPublishSurveyClick = debounce(async (): Promise<void> => {
-    setProcessing(true);
+  const onPublishSurveyClick = usePromisifedDispatch(publishSurveyRequest, {
+    onStart: () => {
+      setProcessing(true);
+      setSuccessMessage(undefined);
+      setErrorMessage(undefined);
+    },
+    onThen: () => setSuccessMessage("Successfully published survey!"),
+    onError: () => setErrorMessage("Failed to publish survey"),
+    onEnd: () => setProcessing(false),
+  });
 
-    await new Promise((resolve, reject) => {
-      dispatch(publishSurveyRequest(survey, resolve, reject));
-    })
-      .then(() => setSuccessMessage("Successfully published survey!"))
-      .catch(() => setErrorMessage("Failed to publish survey"))
-      .finally(() => setProcessing(false));
-  }, 500);
+  const onDebouncedPublishSurveyClick = debounce(
+    onPublishSurveyClick,
+    ONE_SECOND_MS / 2
+  );
 
   return (
     <div className="survey_creation-button_container">
@@ -42,14 +50,16 @@ const SurveyCreationButtonSection = (): React.ReactElement => {
         <Button
           className="survey_creation-button"
           title="Publish Survey"
-          onClick={onPublishSurveyClick}
+          onClick={onDebouncedPublishSurveyClick}
           disabled={!(canPublish || processing)}
           inverting
           round
         />
       </Row>
-      {successMessage && <label>{successMessage}</label>}
-      {errorMessage && <label>{errorMessage}</label>}
+      <ErrorAndSuccessSection
+        successMessage={successMessage}
+        errorMessage={errorMessage}
+      />
       <LoadingOverlay show={processing} message="Publishing Survey..." />
     </div>
   );

@@ -2,10 +2,11 @@ import { useMemo } from "react";
 import { useSelector } from "react-redux";
 
 import { RootState } from "../store/rootReducer";
-import { ISurveyQuestionComponentConfiguration } from "../types/Question";
+import {
+  IQuestion,
+  ISurveyQuestionComponentConfiguration,
+} from "../types/Question";
 import { ISurveyCreationState } from "./reducer";
-
-import { ISurveyQuestionCreation } from "./types";
 
 export const selectSurvey = (): ISurveyCreationState =>
   useSelector((state: RootState) => state.surveyCreation);
@@ -26,6 +27,7 @@ export const selectSurveyCanBePublished = (): boolean => {
 
     const { questions } = survey;
 
+    // eslint-disable-next-line no-restricted-syntax
     for (const question of questions) {
       if (!question.componentSchemaId || !question.title) {
         return false;
@@ -33,6 +35,7 @@ export const selectSurveyCanBePublished = (): boolean => {
 
       const { componentConfiguration } = question;
 
+      // eslint-disable-next-line no-restricted-syntax
       for (const configurationItem of componentConfiguration) {
         if (configurationItem.required && !configurationItem.value) {
           return false;
@@ -50,12 +53,10 @@ export const selectQuestionCanBeRemoved = (): boolean => {
   return useMemo(() => questions.length > 1, [questions]);
 };
 
-export const selectQuestions = (): Array<ISurveyQuestionCreation> =>
+export const selectQuestions = (): Array<IQuestion> =>
   useSelector((state: RootState) => state.surveyCreation.questions);
 
-export const selectQuestionById = (
-  id: string
-): ISurveyQuestionCreation | undefined => {
+export const selectQuestionById = (id: string): IQuestion | undefined => {
   const questions = selectQuestions();
 
   return useMemo(

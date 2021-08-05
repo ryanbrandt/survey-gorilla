@@ -1,4 +1,4 @@
-import { Column, Select, Input } from "handsome-ui";
+import { Select, Input } from "handsome-ui";
 
 import { SurveyComponentProps } from "..";
 import { useSurveyQuestionComponentConfiguration } from "../../SurveyCreation/hooks";
@@ -14,7 +14,7 @@ const SingleLineInputComponentCreator = ({
     useSurveyQuestionComponentConfiguration("help", component, "");
 
   return (
-    <Column>
+    <>
       <Select
         label="Input Type*"
         options={["text", "number", "date"]}
@@ -27,7 +27,7 @@ const SingleLineInputComponentCreator = ({
         value={singleLineInputHelpText}
         onChange={configureSingleInputHelpText}
       />
-    </Column>
+    </>
   );
 };
 

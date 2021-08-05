@@ -2,13 +2,16 @@ import { v4 } from "uuid";
 
 import * as t from "./actionTypes";
 import { Action } from "./actions";
-
-import { ISurveyQuestionCreation } from "./types";
+import { IQuestion } from "../types/Question";
+import {
+  updateConfigurationFieldInCollection,
+  updateQuestionInCollection,
+} from "../utils/helpers";
 
 export interface ISurveyCreationState {
   id: string;
   title: string;
-  questions: Array<ISurveyQuestionCreation>;
+  questions: Array<IQuestion>;
 }
 
 const initialState: ISurveyCreationState = {
@@ -39,7 +42,7 @@ export default function (
     }
 
     case t.ADD_SURVEY_QUESTION: {
-      const newQuestion: ISurveyQuestionCreation = {
+      const newQuestion: IQuestion = {
         id: v4(),
         title: "",
         componentSchemaId: "",
@@ -67,75 +70,56 @@ export default function (
 
     case t.UPDATE_SURVEY_QUESTION: {
       const { componentConfiguration, id } = action;
+      const { questions } = state;
 
-      const updatedQuestionIndex = state.questions.findIndex(
-        (question) => question.id === id
-      );
+      const updatedQuestion = questions.find((question) => question.id === id);
 
-      const newQuestions = [...state.questions];
-      if (updatedQuestionIndex > -1) {
-        const previousQuestionConfiguration =
-          newQuestions[updatedQuestionIndex];
-
-        let questionComponentConfiguration =
-          componentConfiguration.componentConfiguration;
+      if (updatedQuestion) {
+        let newConfiguration = componentConfiguration.componentConfiguration;
         if (
-          componentConfiguration.componentSchemaId !==
-          previousQuestionConfiguration.componentSchemaId
+          updatedQuestion.componentSchemaId !==
+          componentConfiguration.componentSchemaId
         ) {
-          questionComponentConfiguration = [];
+          newConfiguration = [];
         }
 
-        newQuestions[updatedQuestionIndex] = {
-          ...newQuestions[updatedQuestionIndex],
-          ...componentConfiguration,
-          componentConfiguration: questionComponentConfiguration,
+        return {
+          ...state,
+          questions: updateQuestionInCollection(id, questions, {
+            ...componentConfiguration,
+            componentConfiguration: newConfiguration,
+          }),
         };
       }
 
-      return {
-        ...state,
-        questions: newQuestions,
-      };
+      return state;
     }
 
     case t.UPDATE_SURVEY_COMPONENT_CONFIGURATION: {
       const { component, fieldName, value, required } = action;
       const { questionId } = component;
 
-      const updatedQuestionIndex = state.questions.findIndex(
+      const { questions } = state;
+
+      const updatedQuestion = questions.find(
         (question) => question.id === questionId
       );
+      if (updatedQuestion) {
+        const { componentConfiguration } = updatedQuestion;
 
-      const newQuestions = [...state.questions];
-      if (updatedQuestionIndex > -1) {
-        const question = state.questions[updatedQuestionIndex];
-        const { componentConfiguration } = question;
-
-        const updatedConfigurationFieldIndex = componentConfiguration.findIndex(
-          (configurationItem) => configurationItem.name === fieldName
-        );
-
-        const newConfiguration = [...componentConfiguration];
-        if (updatedConfigurationFieldIndex > -1) {
-          newConfiguration[updatedConfigurationFieldIndex] = {
-            ...newConfiguration[updatedConfigurationFieldIndex],
-            value,
-          };
-        } else {
-          newConfiguration.push({ name: fieldName, value, required });
-        }
-
-        newQuestions[updatedQuestionIndex] = {
-          ...newQuestions[updatedQuestionIndex],
-          componentConfiguration: newConfiguration,
+        return {
+          ...state,
+          questions: updateQuestionInCollection(questionId, questions, {
+            componentConfiguration: updateConfigurationFieldInCollection(
+              fieldName,
+              componentConfiguration,
+              { value }
+            ),
+          }),
         };
       }
 
-      return {
-        ...state,
-        questions: newQuestions,
-      };
+      return state;
     }
 
     default: {

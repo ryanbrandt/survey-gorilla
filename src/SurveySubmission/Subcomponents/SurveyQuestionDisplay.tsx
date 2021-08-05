@@ -1,7 +1,8 @@
 import { createElement } from "react";
 
-import surveyComponentFactory, {
-  surveyQuestionComponentConfigurationToProps,
+import {
+  surveyComponentFactory,
+  componentConfigurationToProps,
 } from "../../surveyComponents";
 import { IQuestion } from "../../types/Question";
 
@@ -17,18 +18,16 @@ const SurveyQuestionDisplay = (props: Props): React.ReactElement => {
   const _renderQuestionComponent = (): React.ReactElement => {
     const { componentSchemaId, componentConfiguration } = question;
 
-    const questionComponent = surveyComponentFactory({
-      componentSchemaId,
-      questionId: id,
-    });
+    const questionComponent = surveyComponentFactory(componentSchemaId);
 
     if (questionComponent) {
-      const props = surveyQuestionComponentConfigurationToProps(
+      const questionComponentProps = componentConfigurationToProps(
         componentConfiguration
       );
+
       return createElement(questionComponent, {
-        ...props,
-        component: { questionId: id },
+        ...questionComponentProps,
+        component: { questionId: id, componentSchemaId },
       });
     }
 
@@ -37,7 +36,7 @@ const SurveyQuestionDisplay = (props: Props): React.ReactElement => {
 
   return (
     <div className="question_answer-section">
-      <h2>{title}*</h2>
+      <h3>{title}*</h3>
       {_renderQuestionComponent()}
     </div>
   );

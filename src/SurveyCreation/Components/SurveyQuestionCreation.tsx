@@ -5,17 +5,22 @@ import { Select, Input, Trash, Button } from "handsome-ui";
 
 import {
   getAvailableSurveyComponentOptions,
-  getSurveyComponentCreator,
+  surveyComponentCreatorFactory,
 } from "../../surveyComponents";
-import { ISurveyQuestionCreation } from "../types";
 import { useSurveyQuestionConfiguration } from "../hooks";
 import { GENERIC_REQUIRED_ERROR } from "../../utils/constants";
 import { selectQuestionCanBeRemoved } from "../selectors";
 import { removeSurveyQuestion } from "../actions";
+import { IQuestion } from "../../types/Question";
 
 interface Props {
-  question: ISurveyQuestionCreation;
+  question: IQuestion;
   index: number;
+}
+
+enum CONFIGURABLE_QUESTION_ATTRIBUTES {
+  title = "title",
+  schema = "componentSchemaId",
 }
 
 const SurveyQuestionCreation = ({
@@ -30,7 +35,7 @@ const SurveyQuestionCreation = ({
   const { componentSchemaId, title } = componentConfiguration;
 
   const handleConfigurationChange = (
-    configurationKey: string,
+    configurationKey: CONFIGURABLE_QUESTION_ATTRIBUTES,
     configurationValue: any
   ) => {
     setQuestionConfiguration({
@@ -39,12 +44,27 @@ const SurveyQuestionCreation = ({
     });
   };
 
+  const _renderQuestionCreationComponent = (): React.ReactNode => {
+    const creationComponent = surveyComponentCreatorFactory(componentSchemaId);
+
+    if (creationComponent) {
+      return createElement(creationComponent, {
+        component: {
+          componentSchemaId,
+          questionId: id,
+        },
+      });
+    }
+
+    return <div>This component is not supported</div>;
+  };
+
   const canRemove = selectQuestionCanBeRemoved();
   const dispatch = useDispatch();
   const dispatchRemoveQuestion = () => dispatch(removeSurveyQuestion(index));
 
   return (
-    <div className="survey_creation-question_container flex_center-col">
+    <div className="flex_center-col">
       <h3>Question {index + 1} </h3>
       <Button
         title="Remove"
@@ -57,7 +77,12 @@ const SurveyQuestionCreation = ({
       <Input
         label="Question Title*"
         value={title}
-        onChange={(value: string) => handleConfigurationChange("title", value)}
+        onChange={(value: string) =>
+          handleConfigurationChange(
+            CONFIGURABLE_QUESTION_ATTRIBUTES.title,
+            value
+          )
+        }
         error={!title ? GENERIC_REQUIRED_ERROR : ""}
       />
       <Select
@@ -65,17 +90,14 @@ const SurveyQuestionCreation = ({
         label="Select Survey Question Type*"
         value={componentSchemaId}
         onChange={(value: string) =>
-          handleConfigurationChange("componentSchemaId", value)
+          handleConfigurationChange(
+            CONFIGURABLE_QUESTION_ATTRIBUTES.schema,
+            value
+          )
         }
         error={!componentSchemaId ? GENERIC_REQUIRED_ERROR : ""}
       />
-      {componentSchemaId &&
-        createElement(getSurveyComponentCreator(componentSchemaId), {
-          component: {
-            componentSchemaId,
-            questionId: id,
-          },
-        })}
+      {componentSchemaId && _renderQuestionCreationComponent()}
     </div>
   );
 };

@@ -23,26 +23,24 @@ const SurveyDashboard = (): React.ReactElement => {
     dispatch(listOwnedSurveysRequest(userId));
   }, [userId]);
 
+  const TABS = [
+    {
+      title: "Your Surveys",
+      key: SURVEY_DASHBOARD_TABS.owned,
+      active: activeTab === SURVEY_DASHBOARD_TABS.owned,
+    },
+    {
+      title: "Surveys You've Taken",
+      key: SURVEY_DASHBOARD_TABS.taken,
+      active: activeTab === SURVEY_DASHBOARD_TABS.taken,
+    },
+  ];
+
   return (
     <div>
       <h1 className="flex_center-col">Survey Dashboard</h1>
       <div>
-        <TabMenu
-          tabs={[
-            {
-              title: "Your Surveys",
-              key: SURVEY_DASHBOARD_TABS.owned,
-              active: activeTab === SURVEY_DASHBOARD_TABS.owned,
-            },
-            {
-              title: "Surveys You've Taken",
-              key: SURVEY_DASHBOARD_TABS.taken,
-              active: activeTab === SURVEY_DASHBOARD_TABS.taken,
-            },
-          ]}
-          onSearch={() => null}
-          onTab={() => null}
-        />
+        <TabMenu tabs={TABS} onSearch={() => null} onTab={() => null} />
         <Divider solid />
         <OwnedSurveyResults />
       </div>
