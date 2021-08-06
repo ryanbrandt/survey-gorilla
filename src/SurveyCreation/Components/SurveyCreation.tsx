@@ -1,10 +1,8 @@
-import { Input } from "handsome-ui";
-
-import { GENERIC_REQUIRED_ERROR } from "../../utils/constants";
 import { useSurveyConfiguration } from "../hooks";
 import { selectQuestions } from "../selectors";
-import SurveyCreationButtonSection from "../Subcomponents/SurveyCreationButtonSection";
 
+import SurveyCreationButtonSection from "../Subcomponents/SurveyCreationButtonSection";
+import RequiredInput from "../../common/Components/RequiredInput";
 import SurveyQuestionCreation from "./SurveyQuestionCreation";
 
 const SurveyCreation = (): React.ReactElement => {
@@ -19,13 +17,12 @@ const SurveyCreation = (): React.ReactElement => {
   return (
     <div className="flex_center-col">
       <h1>Create a New Survey</h1>
-      <Input
+      <RequiredInput
         label="Survey Title*"
         value={title}
         onChange={(value: string) =>
           setSurveyConfiguration({ ...surveyConfiguration, title: value })
         }
-        error={!title ? GENERIC_REQUIRED_ERROR : ""}
       />
       {questions.map((question, i) => (
         <SurveyQuestionCreation

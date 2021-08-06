@@ -11,6 +11,21 @@ export const selectOwnedSurveys = (): Array<ISurvey> =>
 export const selectActiveSurveyResults = (): Array<ISurveyQuestionAnswer> =>
   useSelector((state: RootState) => state.surveyDashboard.results);
 
+export const selectActiveSurveyTitle = (): string | undefined =>
+  useSelector((state: RootState) => {
+    const { activeSurvey, ownedSurveys } = state.surveyDashboard;
+
+    const fullSurvey = ownedSurveys.find(
+      (survey) => survey.id === activeSurvey
+    );
+
+    if (fullSurvey) {
+      return fullSurvey.title;
+    }
+
+    return undefined;
+  });
+
 export const selectActiveSurveyResultsByQuestion =
   (): ISurveyAnswersByQuestion => {
     const results = selectActiveSurveyResults();

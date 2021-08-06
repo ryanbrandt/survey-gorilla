@@ -45,3 +45,19 @@ export const updateConfigurationFieldInCollection = (
 
   return newConfiguration;
 };
+
+export const utcDateStringToLocaleDateTimeString = (
+  dateString: string
+): string => {
+  const date = new Date(dateString);
+
+  return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+};
+
+export const openWindow = (url: string): void => {
+  const newWindow = window.open(url);
+
+  if (newWindow) {
+    newWindow.opener = null;
+  }
+};

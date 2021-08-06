@@ -2,3 +2,21 @@
 @import "./styles/common.scss";
 @import "./styles/creation.scss";
 @import "./styles/dashboard.scss";
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+  font-family: "Sofia Pro";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body::-webkit-scrollbar {
+  width: 0.4em;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
+}

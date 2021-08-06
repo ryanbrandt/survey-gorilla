@@ -1,5 +1,32 @@
-.results {
-  &-table {
+.dashboard {
+  &_table {
     width: 100%;
+    padding: 25px;
+
+    &-container {
+      padding: 20px;
+    }
+  }
+
+  &_results {
+    &-btn {
+      margin: 20px;
+
+      @media (min-width: $desktop-min-width) {
+        float: right;
+      }
+
+      &-container {
+        @media (max-width: $mobile-max-width) {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+    }
+  }
+
+  &-link {
+    text-decoration: underline;
   }
 }

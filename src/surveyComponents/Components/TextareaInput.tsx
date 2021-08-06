@@ -1,10 +1,8 @@
-import { Text } from "handsome-ui";
-
 import { ISurveyComponentRegistry, SurveyComponentProps } from "..";
-
 import { useSurveyQuestionAnswer } from "../../SurveySubmission/hooks";
-import { GENERIC_REQUIRED_ERROR } from "../../utils/constants";
+
 import TextareaInputCreator from "../Creators/TextareaInputCreator";
+import RequiredText from "../../common/Components/RequiredText";
 
 interface TextAreaInputProps extends SurveyComponentProps {
   placeholder?: string;
@@ -20,12 +18,11 @@ export const TextAreaInput = ({
   const { placeholder, help } = props;
 
   return (
-    <Text
+    <RequiredText
       placeholder={placeholder}
       help={help}
       value={answer}
       onChange={setAnswer}
-      error={!answer ? GENERIC_REQUIRED_ERROR : ""}
     />
   );
 };

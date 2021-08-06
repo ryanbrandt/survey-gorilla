@@ -1,8 +1,7 @@
-import { Input } from "handsome-ui";
-
 import { ISurveyComponentRegistry, SurveyComponentProps } from "..";
 import { useSurveyQuestionAnswer } from "../../SurveySubmission/hooks";
-import { GENERIC_REQUIRED_ERROR } from "../../utils/constants";
+
+import RequiredInput from "../../common/Components/RequiredInput";
 import SingleLineInputComponentCreator from "../Creators/SingleLineInputComponentCreator";
 
 interface SingleLinInputProps extends SurveyComponentProps {
@@ -24,12 +23,11 @@ export const SingleLineInput = ({
   }
 
   return (
-    <Input
+    <RequiredInput
       help={help}
       type={type}
       value={parsedValue}
       onChange={setAnswer}
-      error={!answer ? GENERIC_REQUIRED_ERROR : ""}
     />
   );
 };

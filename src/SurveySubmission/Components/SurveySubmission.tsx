@@ -17,6 +17,7 @@ const SurveySubmission = (): React.ReactElement => {
   const pathParameters = usePathParameters<{ id: string }>();
 
   const dispatch = useDispatch();
+
   useEffect(() => {
     const { id } = pathParameters;
     dispatch(retrieveSurveyByIdRequest(id));

@@ -1,17 +1,18 @@
 import { createElement } from "react";
 import { useDispatch } from "react-redux";
 
-import { Select, Input, Trash, Button } from "handsome-ui";
+import { Trash, Button } from "handsome-ui";
 
 import {
   getAvailableSurveyComponentOptions,
   surveyComponentCreatorFactory,
 } from "../../surveyComponents";
 import { useSurveyQuestionConfiguration } from "../hooks";
-import { GENERIC_REQUIRED_ERROR } from "../../utils/constants";
 import { selectQuestionCanBeRemoved } from "../selectors";
 import { removeSurveyQuestion } from "../actions";
 import { IQuestion } from "../../types/Question";
+import RequiredInput from "../../common/Components/RequiredInput";
+import RequiredSelect from "../../common/Components/RequiredSelect";
 
 interface Props {
   question: IQuestion;
@@ -74,7 +75,7 @@ const SurveyQuestionCreation = ({
         round
         inverting
       />
-      <Input
+      <RequiredInput
         label="Question Title*"
         value={title}
         onChange={(value: string) =>
@@ -83,11 +84,10 @@ const SurveyQuestionCreation = ({
             value
           )
         }
-        error={!title ? GENERIC_REQUIRED_ERROR : ""}
       />
-      <Select
+      <RequiredSelect
         options={getAvailableSurveyComponentOptions()}
-        label="Select Survey Question Type*"
+        label="Select Question Type*"
         value={componentSchemaId}
         onChange={(value: string) =>
           handleConfigurationChange(
@@ -95,7 +95,6 @@ const SurveyQuestionCreation = ({
             value
           )
         }
-        error={!componentSchemaId ? GENERIC_REQUIRED_ERROR : ""}
       />
       {componentSchemaId && _renderQuestionCreationComponent()}
     </div>

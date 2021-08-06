@@ -2,7 +2,10 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 import { activeSurveyResultsRequest } from "../actions";
-import { selectActiveSurveyResultsByQuestion } from "../selectors";
+import {
+  selectActiveSurveyResultsByQuestion,
+  selectActiveSurveyTitle,
+} from "../selectors";
 import { IParsedAnswer } from "../types";
 
 const SurveyAnswerResults = (): React.ReactElement => {
@@ -13,6 +16,7 @@ const SurveyAnswerResults = (): React.ReactElement => {
   }, []);
 
   const answersByQuestion = selectActiveSurveyResultsByQuestion();
+  const surveyTitle = selectActiveSurveyTitle();
 
   const _renderQuestionAnswers = (
     answers: Array<IParsedAnswer>
@@ -25,7 +29,7 @@ const SurveyAnswerResults = (): React.ReactElement => {
 
   return (
     <div className="flex_center-col">
-      <h1>Results</h1>
+      <h1>{surveyTitle} Results</h1>
       {Object.keys(answersByQuestion).map((question) => (
         <div key={question}>
           <h3>{question}</h3>

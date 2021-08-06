@@ -1,8 +1,8 @@
 $desktop-min-width: 1040px;
 $mobile-max-width: 1039px;
 
-$informed-gray: #506670c5;
-$informed-warn: rgba(201, 18, 18, 0.678);
+$app-gray: #506670c5;
+$app-warn: rgba(201, 18, 18, 0.678);
 
 .message_section {
   &-container {
@@ -33,17 +33,11 @@ $informed-warn: rgba(201, 18, 18, 0.678);
 
 .app {
   &-warning {
-    color: $informed-warn;
+    color: rgba(201, 18, 18, 0.678);
   }
 
   &-success {
     color: rgb(144, 211, 144);
-  }
-
-  &_informed-dimmed {
-    fill: $informed-gray;
-    color: $informed-gray;
-    opacity: 0.75;
   }
 
   &-fade-in {
@@ -51,7 +45,7 @@ $informed-warn: rgba(201, 18, 18, 0.678);
     transition: all 0.5s;
 
     &:hover {
-      color: $informed-gray;
+      color: $app-gray;
       transition: all 0.5s;
     }
   }
@@ -80,27 +74,5 @@ $informed-warn: rgba(201, 18, 18, 0.678);
     @extend .flex_center-col;
     flex-wrap: wrap;
     margin: 50px;
-  }
-}
-
-.removable_badge {
-  &-remove-btn {
-    @extend .app-warning;
-    margin-left: 15px;
-    font-weight: 600;
-    width: fit-content;
-    cursor: pointer;
-  }
-}
-
-.dropdown_section {
-  &-header {
-    font-size: 32px;
-    font-weight: 600;
-    flex-wrap: wrap;
-  }
-
-  &-container {
-    padding: 25px 10px 25px 10px;
   }
 }

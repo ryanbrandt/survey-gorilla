@@ -1,8 +1,8 @@
-import { Select, Input } from "handsome-ui";
+import { Input } from "handsome-ui";
 
 import { SurveyComponentProps } from "..";
+import RequiredSelect from "../../common/Components/RequiredSelect";
 import { useSurveyQuestionComponentConfiguration } from "../../SurveyCreation/hooks";
-import { GENERIC_REQUIRED_ERROR } from "../../utils/constants";
 
 const SingleLineInputComponentCreator = ({
   component,
@@ -15,12 +15,11 @@ const SingleLineInputComponentCreator = ({
 
   return (
     <>
-      <Select
+      <RequiredSelect
         label="Input Type*"
         options={["text", "number", "date"]}
         value={singleLineInputType}
         onChange={configureSingleLineInputType}
-        error={!singleLineInputType ? GENERIC_REQUIRED_ERROR : ""}
       />
       <Input
         label="Help Text"
